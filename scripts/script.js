@@ -18,14 +18,23 @@ window.addEventListener("load", () => {
                         const activityTR = document.createElement("tr")
                         const activityTHrow = document.createElement("th")
                         activityTHrow.setAttribute("scope", "row")
-                        activityTHrow.innerHTML= retVal+1
+                        activityTHrow.innerHTML= retVal
+                        console.log(data);
+                        
 
-
-
-                        const activityList = document.querySelectorAll('.row .col-sm-6 .col-sm-12 .table #activityList')
-                        console.log(activityList);
                         activityTR.appendChild(activityTHrow)
+                        activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.activity}))
+                        activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.type}))
+                        activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.participants}))
+                        activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.price}))
+
+                        const activityList = document.querySelector('.row .col-sm-6 .col-sm-12 .table #activityList')
                         activityList.appendChild(activityTR)
+
+
+
+                        document.getElementById('formBtn').removeAttribute('disabled')
+                        document.getElementById('loading').classList.add('visually-hidden')
                     }
                     // console.log("SUCCESS")
                     // document.getElementById('formBtn').removeAttribute('disabled')
@@ -46,16 +55,18 @@ form.addEventListener("submit", (event) => {
     const dataAsString = data.map(x => `${encodeURIComponent(x[0])}=${encodeURIComponent(x[1])}`).join('&');
     console.log(('https://www.boredapi.com/api/activity' + '?' + new URLSearchParams(formData.toString())));
 
-    // prepare ui
-    // form.setAttribute('disabled', true)
+
     document.getElementById('formBtn').setAttribute('disabled', true)
     document.getElementById('loading').classList.remove('visually-hidden')
+
 
     sendData(data);
 });
 });
 
 function tableCounter() {
-    retVal = document.querySelectorAll('.row .col-sm-6 .col-sm-12 .table');
-    return retVal;
+    retVal = document.querySelectorAll('.row .col-sm-6 .col-sm-12 .table #activityList');
+    console.log(retVal);
+    return retVal.length
+    ;
 }
