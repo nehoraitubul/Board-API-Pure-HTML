@@ -4,6 +4,8 @@ function updateTextInput(val) {
 
 
 window.addEventListener("load", () => {
+
+    var counter = 1
         
     function sendData(formData) {
 
@@ -12,36 +14,60 @@ window.addEventListener("load", () => {
             .then((response) => response.json())
                 .then((data) => {
                     if ("error" in data) {
-                        console.log('error');
+                        document.getElementById('alertError').classList.remove('visually-hidden')
+                        timerId = setTimeout(
+                            () => {
+                                document.getElementById('alertError').classList.add('visually-hidden')
+                            }, 2 * 1000
+                        )
                     } else {
-                        retVal = tableCounter()
                         const activityTR = document.createElement("tr")
                         const activityTHrow = document.createElement("th")
                         activityTHrow.setAttribute("scope", "row")
-                        activityTHrow.innerHTML= retVal
+                        activityTHrow.innerHTML= counter
+                        counter += 1
                         console.log(data);
                         
 
                         activityTR.appendChild(activityTHrow)
                         activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.activity}))
-                        activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.type}))
                         activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.participants}))
                         activityTR.appendChild(Object.assign(document.createElement('th'),{innerHTML:data.price}))
+                        btn = (Object.assign(document.createElement('button'),{innerHTML:'X'}))
+                        // btn.onclick = function(this) {console.log(this);}
+                        btn.setAttribute("onclick",'removeItem(this)')
+                        btnTR = document.createElement('th').appendChild(btn)
+                        activityTR.appendChild(btnTR)
 
-                        const activityList = document.querySelector('.row .col-sm-6 .col-sm-12 .table #activityList')
+                        const activityList = document.getElementById("activityList")
                         activityList.appendChild(activityTR)
 
-
-
-                        document.getElementById('formBtn').removeAttribute('disabled')
-                        document.getElementById('loading').classList.add('visually-hidden')
+                        document.getElementById('alertSucess').classList.remove('visually-hidden')
+                        timerId = setTimeout(
+                            () => {
+                                document.getElementById('alertSucess').classList.add('visually-hidden')
+                            }, 2 * 1000
+                        )
+                        
+                        
                     }
-                    // console.log("SUCCESS")
-                    // document.getElementById('formBtn').removeAttribute('disabled')
-                    // document.getElementById('loading').classList.add('visually-hidden')
-                    // console.log(data)
+
             })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+            document.getElementById('alertError').classList.remove('visually-hidden')
+            timerId = setTimeout(
+                () => {
+                    document.getElementById('alertError').classList.add('visually-hidden')
+                }, 2 * 1000
+            )
+            
+        })
+        .finally(() => {
+            document.getElementById('formBtn').removeAttribute('disabled')
+            document.getElementById('loading').classList.add('visually-hidden')
+          });
+        
+
 }
 
 // Get the form element
@@ -64,9 +90,7 @@ form.addEventListener("submit", (event) => {
 });
 });
 
-function tableCounter() {
-    retVal = document.querySelectorAll('.row .col-sm-6 .col-sm-12 .table #activityList');
-    console.log(retVal);
-    return retVal.length
-    ;
+
+function removeItem(elem) {
+    elem.parentNode.remove()
 }

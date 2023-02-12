@@ -13,3 +13,8 @@ hr {
     padding-top: 20px;
     padding-bottom: 5px;
 }
+
+.alert {
+    position: absolute;
+    width: 50%;
+  }
